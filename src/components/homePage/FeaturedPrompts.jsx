@@ -33,7 +33,7 @@ const FEATURED_PROMPTS = [
     id: 2,
     title: "check",
     description: "check Des",
-    image: null, // Fallback placeholder UI
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80",
     model: "CHATGPT",
     level: "BEGINNER",
     isPremium: false,
@@ -46,7 +46,7 @@ const FEATURED_PROMPTS = [
     id: 3,
     title: "check 01",
     description: "check Des 01",
-    image: null,
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80",
     model: "CHATGPT",
     level: "INTERMEDIATE",
     isPremium: true,
