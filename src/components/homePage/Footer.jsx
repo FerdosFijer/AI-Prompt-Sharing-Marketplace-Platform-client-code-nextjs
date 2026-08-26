@@ -138,9 +138,9 @@ export default function Footer() {
         {/* Bottom Copyright & Credit */}
         <div className="mt-12 border-t border-white/10 pt-6 text-center text-xs text-default-400">
           <p className="flex items-center justify-center gap-1">
-            © {new Date().getFullYear()} Aiverse. All rights reserved. Created with{" "}
-            <HeartFill className="h-3.5 w-3.5 text-pink-500 inline-block" /> by{" "}
-            <span className="font-bold text-white">Abu Jakaria</span>
+            © {new Date().getFullYear()} Aiverse. All rights reserved. Created {" "}
+            <span className="font-bold text-white"> by{" "} Fijer</span>
+            <HeartFill className="h-3.5 w-3.5 text-pink-500 inline-block" /> 
           </p>
         </div>
       </div>
