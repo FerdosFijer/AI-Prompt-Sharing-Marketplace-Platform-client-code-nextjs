@@ -11,6 +11,7 @@ import { authClient } from "@/lib/auth-client";
 export default function SignUpForm() {
   const router = useRouter();
 
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -76,6 +77,7 @@ export default function SignUpForm() {
         password: formData.password,
         name: formData.name,
         image: formData.image || undefined,
+        role: "user",
       });
 
       if (authError) {
@@ -149,7 +151,7 @@ export default function SignUpForm() {
               className={`relative flex items-center rounded-xl border px-3 transition-all h-11 ${
                 fieldErrors.name
                   ? "border-rose-500/80 bg-rose-950/20"
-                  : "border-white/10 bg-white/[0.03] hover:border-purple-500/40 focus-within:border-purple-500/60 focus-within:ring-1 focus-within:ring-purple-500/30"
+                  : "border-white/10 bg-white/3 hover:border-purple-500/40 focus-within:border-purple-500/60 focus-within:ring-1 focus-within:ring-purple-500/30"
               }`}
             >
               <Person className={`h-4 w-4 shrink-0 mr-2.5 ${fieldErrors.name ? "text-rose-400" : "text-default-400"}`} />
@@ -175,7 +177,7 @@ export default function SignUpForm() {
               className={`relative flex items-center rounded-xl border px-3 transition-all h-11 ${
                 fieldErrors.email
                   ? "border-rose-500/80 bg-rose-950/20"
-                  : "border-white/10 bg-white/[0.03] hover:border-purple-500/40 focus-within:border-purple-500/60 focus-within:ring-1 focus-within:ring-purple-500/30"
+                  : "border-white/10 bg-white/3 hover:border-purple-500/40 focus-within:border-purple-500/60 focus-within:ring-1 focus-within:ring-purple-500/30"
               }`}
             >
               <At className={`h-4 w-4 shrink-0 mr-2.5 ${fieldErrors.email ? "text-rose-400" : "text-default-400"}`} />
@@ -201,7 +203,7 @@ export default function SignUpForm() {
               className={`relative flex items-center rounded-xl border px-3 transition-all h-11 ${
                 fieldErrors.image
                   ? "border-rose-500/80 bg-rose-950/20"
-                  : "border-white/10 bg-white/[0.03] hover:border-purple-500/40 focus-within:border-purple-500/60 focus-within:ring-1 focus-within:ring-purple-500/30"
+                  : "border-white/10 bg-white/3 hover:border-purple-500/40 focus-within:border-purple-500/60 focus-within:ring-1 focus-within:ring-purple-500/30"
               }`}
             >
               <Picture className="h-4 w-4 text-default-400 shrink-0 mr-2.5" />
@@ -227,7 +229,7 @@ export default function SignUpForm() {
               className={`relative flex items-center rounded-xl border px-3 transition-all h-11 ${
                 fieldErrors.password
                   ? "border-rose-500/80 bg-rose-950/20"
-                  : "border-white/10 bg-white/[0.03] hover:border-purple-500/40 focus-within:border-purple-500/60 focus-within:ring-1 focus-within:ring-purple-500/30"
+                  : "border-white/10 bg-white/3 hover:border-purple-500/40 focus-within:border-purple-500/60 focus-within:ring-1 focus-within:ring-purple-500/30"
               }`}
             >
               <Lock className={`h-4 w-4 shrink-0 mr-2.5 ${fieldErrors.password ? "text-rose-400" : "text-default-400"}`} />
@@ -277,7 +279,7 @@ export default function SignUpForm() {
         <Button
           onPress={handleGoogleSignIn}
           variant="bordered"
-          className="w-full flex items-center justify-center gap-2 border-white/10 bg-white/[0.03] font-medium text-white hover:bg-white/10 rounded-xl text-xs sm:text-sm h-11 transition-all"
+          className="w-full flex items-center justify-center gap-2 border-white/10 bg-white/3 font-medium text-white hover:bg-white/10 rounded-xl text-xs sm:text-sm h-11 transition-all"
         >
           <FaGoogle className="h-4 w-4 text-white" />
           <span>Sign in with Google</span>
@@ -288,7 +290,7 @@ export default function SignUpForm() {
           <p className="text-xs text-default-400">
             Already have an account?{" "}
             <Link
-              href="/signin"
+              href="/auth/signin"
               className="font-semibold text-purple-400 hover:text-purple-300 transition-all underline underline-offset-4"
             >
               Sign In

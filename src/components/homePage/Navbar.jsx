@@ -2,15 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button, Avatar } from "@heroui/react";
-import {
-  Bars,
-  Xmark,
-  ArrowRightFromSquare,
-  Sparkles,
-} from "@gravity-ui/icons";
+import { useRouter } from "next/navigation";
+import { Button, Avatar, Spinner } from "@heroui/react";
+import { Bars, Xmark, ArrowRightFromSquare, Sparkles } from "@gravity-ui/icons";
+import { authClient } from "@/lib/auth-client";
 
-// Centralized navigation links
 const NAV_LINKS = [
   {
     label: "Home",
@@ -22,9 +18,27 @@ const NAV_LINKS = [
   },
 ];
 
-export default function Navbar({ user = null, onLogout }) {
+export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isLoggedIn = !!user;
+  const router = useRouter();
+
+  // Dynamic Better Auth Session Hook
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
+
+  const handleLogout = async () => {
+    try {
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            router.push("/auth/signin");
+          },
+        },
+      });
+    } catch (err) {
+      console.error("Failed to sign out", err);
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-40 w-full border-b border-white/10 bg-background/80 backdrop-blur-lg">
@@ -37,10 +51,17 @@ export default function Navbar({ user = null, onLogout }) {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle navigation menu"
           >
-            {isMenuOpen ? <Xmark className="h-6 w-6" /> : <Bars className="h-6 w-6" />}
+            {isMenuOpen ? (
+              <Xmark className="h-6 w-6" />
+            ) : (
+              <Bars className="h-6 w-6" />
+            )}
           </button>
 
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-bold text-xl tracking-tight"
+          >
             <Sparkles className="h-6 w-6 text-purple-500" />
             <span className="text-white">AI</span>
             <span className="text-cyan-400 -ml-1">verse</span>
@@ -63,24 +84,28 @@ export default function Navbar({ user = null, onLogout }) {
           </ul>
 
           {/* User Session Section */}
-          {isLoggedIn ? (
+          {isPending ? (
+            <div className="flex items-center justify-center pl-4 border-l border-white/10 h-8 min-w-25">
+              <Spinner size="sm" color="purple" />
+            </div>
+          ) : user ? (
             <div className="flex items-center gap-4 pl-4 border-l border-white/10">
               <div className="flex items-center gap-2.5">
                 <Avatar
-                  src={user.avatarUrl}
-                  name={user.name}
+                  src={user.image}
+                  name={user?.name}
                   size="sm"
                   className="ring-2 ring-purple-500/50"
                 />
-                <span className="text-sm font-medium text-white max-w-[120px] truncate">
-                  {user.name}
+                <span className="text-sm font-medium text-white max-w-30 truncate">
+                  Hi, {user.name}
                 </span>
               </div>
 
               <Button
                 size="sm"
                 variant="flat"
-                onClick={onLogout}
+                onClick={handleLogout}
                 className="bg-default-100/10 text-default-300 hover:bg-danger-500/20 hover:text-danger-400"
                 startContent={<ArrowRightFromSquare className="h-4 w-4" />}
               >
@@ -89,12 +114,16 @@ export default function Navbar({ user = null, onLogout }) {
             </div>
           ) : (
             <div className="flex items-center gap-3 pl-4 border-l border-white/10">
-              <Button as={Link} href="/login" size="sm" variant="light">
-                Sign In
-              </Button>
-              <Button as={Link} href="/register" size="sm" color="primary">
-                Get Started
-              </Button>
+              <Link href="/auth/signin">
+                <Button size="sm" variant="light">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/auth/signup">
+                <Button size="sm" color="primary">
+                  Get Started
+                </Button>
+              </Link>
             </div>
           )}
         </div>
@@ -117,18 +146,28 @@ export default function Navbar({ user = null, onLogout }) {
             ))}
 
             <li className="pt-2 border-t border-white/10">
-              {isLoggedIn ? (
+              {isPending ? (
+                <div className="flex items-center justify-center py-3">
+                  <Spinner size="sm" color="purple" />
+                </div>
+              ) : user ? (
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center gap-2">
-                    <Avatar src={user.avatarUrl} name={user.name} size="sm" />
-                    <span className="text-sm font-medium text-white">{user.name}</span>
+                    <Avatar
+                      src={user.image}
+                      name={user.name}
+                      size="sm"
+                    />
+                    <span className="text-sm font-medium text-white">
+                      {user.name}
+                    </span>
                   </div>
                   <Button
                     size="sm"
                     variant="flat"
                     onClick={() => {
                       setIsMenuOpen(false);
-                      onLogout?.();
+                      handleLogout();
                     }}
                     startContent={<ArrowRightFromSquare className="h-4 w-4" />}
                   >
@@ -137,12 +176,22 @@ export default function Navbar({ user = null, onLogout }) {
                 </div>
               ) : (
                 <div className="flex flex-col gap-2 pt-2">
-                  <Button as={Link} href="/login" fullWidth variant="bordered">
-                    Sign In
-                  </Button>
-                  <Button as={Link} href="/register" fullWidth color="primary">
-                    Get Started
-                  </Button>
+                  <Link
+                    href="/auth/signin"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Button className="w-full" size="sm" variant="light">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Button className="w-full" size="sm" color="primary">
+                      Get Started
+                    </Button>
+                  </Link>
                 </div>
               )}
             </li>
