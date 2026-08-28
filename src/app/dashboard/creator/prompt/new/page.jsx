@@ -102,10 +102,10 @@ export default function CreatePromptForm() {
     <div className="max-w-2xl mx-auto p-6 bg-[#0B0F19] text-white rounded-2xl shadow-2xl border border-gray-800">
       <header className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight text-white">
-          Create New Prompt Template :
+          Create New Prompt Templates
         </h1>
         <p className="text-sm text-gray-400 mt-1">
-          Fill in details to submit a prompt to the community catalog.
+          Fill in details to submit a prompt to the community catalog
         </p>
       </header>
 
