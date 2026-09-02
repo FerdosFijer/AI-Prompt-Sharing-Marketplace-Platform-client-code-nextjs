@@ -107,7 +107,7 @@ export default async function PromptDetailsPage({ params }) {
                   </div>
                 </div>
               ) : (
-                <div className="bg-[#050811] border border-gray-800/80 rounded-2xl p-5 text-xs text-purple-300 font-mono leading-relaxed break-words">
+                <div className="bg-[#050811] border border-gray-800/80 rounded-2xl p-5 text-xs text-purple-300 font-mono leading-relaxed wrap-break-word">
                   {prompt.content}
                 </div>
               )}
@@ -264,7 +264,7 @@ export default async function PromptDetailsPage({ params }) {
                   <div>
                     <h4 className="text-xs font-bold text-white">Learning Node (Store)</h4>
                     <p className="text-[10px] text-gray-500">8/10/2026</p>
-                    <p className="text-xs text-gray-300 italic mt-2">"Very long prompt"</p>
+                    <p className="text-xs text-gray-300 italic mt-2"> Very long prompt </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-0.5">
