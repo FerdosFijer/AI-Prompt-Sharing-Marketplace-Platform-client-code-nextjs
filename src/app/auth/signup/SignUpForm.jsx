@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Button, Card } from "@heroui/react";
 import { Person, At, Picture, Lock, ArrowRight, ShieldCheck, Eye, EyeSlash } from "@gravity-ui/icons";
 import { FaGoogle } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 
 export default function SignUpForm() {
-  const router = useRouter();
-
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
 
   const [formData, setFormData] = useState({
     name: "",
@@ -29,14 +29,12 @@ export default function SignUpForm() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear specific field error when user starts typing again
     if (fieldErrors[name]) {
       setFieldErrors((prev) => ({ ...prev, [name]: "" }));
     }
     if (generalError) setGeneralError("");
   };
 
-  // Client-Side Validation Logic
   const validateForm = () => {
     const errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -66,7 +64,6 @@ export default function SignUpForm() {
     setGeneralError("");
     setSuccess("");
 
-    // Prevent sign-up if client validation fails
     if (!validateForm()) return;
 
     setLoading(true);
@@ -82,8 +79,7 @@ export default function SignUpForm() {
 
       if (authError) {
         const msg = authError.message?.toLowerCase() || "";
-        
-        // Map backend errors directly under specific fields if applicable
+
         if (msg.includes("email") || msg.includes("user already exists") || msg.includes("exist")) {
           setFieldErrors((prev) => ({ ...prev, email: "This email is already registered." }));
         } else if (msg.includes("password")) {
@@ -96,8 +92,8 @@ export default function SignUpForm() {
       } else {
         setSuccess("Account created successfully! Redirecting...");
         setTimeout(() => {
-          router.push("/");
-        }, 1500);
+          window.location.href = redirectTo;
+        }, 800);
       }
     } catch (err) {
       setGeneralError("An unexpected error occurred. Please try again.");
@@ -111,7 +107,7 @@ export default function SignUpForm() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/",
+        callbackURL: redirectTo,
       });
     } catch (err) {
       setGeneralError("Failed to authenticate with Google.");
@@ -121,7 +117,6 @@ export default function SignUpForm() {
   return (
     <Card className="border border-white/10 bg-[#090b1e]/70 backdrop-blur-xl shadow-2xl p-2 sm:p-4 rounded-3xl">
       <div className="flex flex-col gap-5">
-        {/* Header / Brand */}
         <div className="text-center">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-950/30 px-3 py-1 text-xs text-purple-300 backdrop-blur-md mb-3">
             <ShieldCheck className="h-3.5 w-3.5 text-purple-400" />
@@ -131,7 +126,6 @@ export default function SignUpForm() {
           <p className="text-xs text-default-400 mt-1">Unlock engineering-grade prompts & resources</p>
         </div>
 
-        {/* Global Error & Success Alerts */}
         {generalError && (
           <div className="rounded-xl border border-rose-500/30 bg-rose-950/40 p-3 text-center text-xs text-rose-300 font-medium animate-in fade-in duration-200">
             {generalError}
@@ -143,9 +137,7 @@ export default function SignUpForm() {
           </div>
         )}
 
-        {/* Form */}
         <form onSubmit={handleSignUp} className="flex flex-col gap-4 mt-1" noValidate>
-          {/* Name Field */}
           <div className="flex flex-col gap-1">
             <div
               className={`relative flex items-center rounded-xl border px-3 transition-all h-11 ${
@@ -171,7 +163,6 @@ export default function SignUpForm() {
             )}
           </div>
 
-          {/* Email Field */}
           <div className="flex flex-col gap-1">
             <div
               className={`relative flex items-center rounded-xl border px-3 transition-all h-11 ${
@@ -197,7 +188,6 @@ export default function SignUpForm() {
             )}
           </div>
 
-          {/* Photo URL Field */}
           <div className="flex flex-col gap-1">
             <div
               className={`relative flex items-center rounded-xl border px-3 transition-all h-11 ${
@@ -223,7 +213,6 @@ export default function SignUpForm() {
             )}
           </div>
 
-          {/* Password Field */}
           <div className="flex flex-col gap-1">
             <div
               className={`relative flex items-center rounded-xl border px-3 transition-all h-11 ${
@@ -256,7 +245,6 @@ export default function SignUpForm() {
             )}
           </div>
 
-          {/* Submit Button */}
           <Button
             type="submit"
             isLoading={loading}
@@ -267,7 +255,6 @@ export default function SignUpForm() {
           </Button>
         </form>
 
-        {/* Divider */}
         <div className="relative flex items-center justify-center my-1">
           <div className="w-full border-t border-white/10" />
           <span className="absolute bg-[#0b0d23] px-3 text-[11px] text-default-500 uppercase tracking-wider">
@@ -275,7 +262,6 @@ export default function SignUpForm() {
           </span>
         </div>
 
-        {/* Google OAuth Button */}
         <Button
           onPress={handleGoogleSignIn}
           variant="bordered"
@@ -285,12 +271,11 @@ export default function SignUpForm() {
           <span>Sign in with Google</span>
         </Button>
 
-        {/* Navigation Link to Sign In */}
         <div className="text-center mt-2">
           <p className="text-xs text-default-400">
             Already have an account?{" "}
             <Link
-              href="/auth/signin"
+              href={`/auth/signin?redirect=${encodeURIComponent(redirectTo)}`}
               className="font-semibold text-purple-400 hover:text-purple-300 transition-all underline underline-offset-4"
             >
               Sign In

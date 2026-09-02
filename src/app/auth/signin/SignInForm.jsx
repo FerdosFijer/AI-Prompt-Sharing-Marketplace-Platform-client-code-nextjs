@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Card } from "@heroui/react";
 import { At, Lock, ArrowRight, ShieldCheck, Eye, EyeSlash } from "@gravity-ui/icons";
 import { FaGoogle } from "react-icons/fa";
@@ -10,6 +10,8 @@ import { authClient } from "@/lib/auth-client"; // Adjust path to your Better Au
 
 export default function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
 
   const [formData, setFormData] = useState({
     email: "",
@@ -81,7 +83,7 @@ export default function SignInForm() {
       } else {
         setSuccess("Signed in successfully! Redirecting...");
         setTimeout(() => {
-          router.push("/");
+          router.push(redirectTo);
         }, 1200);
       }
     } catch (err) {
@@ -104,7 +106,7 @@ export default function SignInForm() {
   };
 
   return (
-    <Card className="border border-white/10 bg-[#090b1e]/70 backdrop-blur-xl shadow-2xl p-2 sm:p-4 rounded-3xl">
+    <Card className="w-full max-w-lg mx-auto border border-white/10 bg-[#090b1e]/70 backdrop-blur-xl shadow-2xl p-4 sm:p-6 rounded-3xl">
       <div className="flex flex-col gap-5">
         {/* Header / Brand */}
         <div className="text-center">
@@ -223,7 +225,7 @@ export default function SignInForm() {
           <p className="text-xs text-default-400">
             Do not have an account?{" "}
             <Link
-              href="/auth/signup"
+              href={`/auth/signup?redirect=${redirectTo}`}
               className="font-semibold text-purple-400 hover:text-purple-300 transition-all underline underline-offset-4"
             >
               Sign Up
