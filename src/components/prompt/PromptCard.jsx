@@ -7,17 +7,7 @@ import { Card, Chip, Button } from "@heroui/react";
 import { Eye, Copy, Lock, Hashtag, Sparkles } from "@gravity-ui/icons";
 
 export default function PromptCard({ prompt }) {
-  const {
-    _id,
-    title,
-    description,
-    category,
-    aiTool,
-    difficulty,
-    visibility,
-    thumbnail,
-    copyCount = 0,
-  } = prompt || {};
+  const { _id,  title, description, category, aiTool, difficulty, visibility, thumbnail, copyCount = 0,} = prompt || {};
 
   const isPrivate = visibility === "private";
 

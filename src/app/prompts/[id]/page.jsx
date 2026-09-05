@@ -98,7 +98,7 @@ export default async function PromptDetailsPage({ params }) {
                     </p>
                     <div className="pt-2">
                       <Link 
-                        href="/payment" 
+                        href="/plans" 
                         className="inline-block px-6 py-2.5 bg-cyan-400 hover:bg-cyan-300 text-black font-bold text-xs rounded-full shadow-lg shadow-cyan-500/20 transition-all transform hover:scale-[1.02]"
                       >
                         Subscribe to Premium ($5)
